@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'Residente_Evil';
+    src: url('./fonte/Resident_Evil_Large.ttf') format('truetype');
+  }
+
+.componentes {
+    text-align: center;
+    color: white;
+    font-family: 'Residente_Evil';
+    
+}
+
+.botao{
+    
+    margin: 5px;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(119, 91, 241);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Residente_Evil';
+
+}
+.imagem {
+    display: block;
+    margin-top: 20px; /* Espaçamento entre os botões e a imagem */
+    margin-left: auto; /* Centraliza horizontalmente */
+    margin-right: auto; /* Centraliza horizontalmente */
+    width: 200px; /* Ajuste o tamanho conforme necessário */
+    
+  }
+  
+  
+  
+  
+  
+  
