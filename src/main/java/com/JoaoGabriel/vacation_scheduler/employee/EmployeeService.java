@@ -3,6 +3,7 @@ package com.JoaoGabriel.vacation_scheduler.employee;
 import com.JoaoGabriel.vacation_scheduler.employee.dto.EmployeeRequest;
 import com.JoaoGabriel.vacation_scheduler.employee.dto.EmployeeResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.JoaoGabriel.vacation_scheduler.employee.exception.EmailAlreadyExistsException;
 
@@ -11,6 +12,7 @@ import com.JoaoGabriel.vacation_scheduler.employee.exception.EmailAlreadyExistsE
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public EmployeeResponse create(EmployeeRequest request) {
@@ -23,7 +25,9 @@ public class EmployeeService {
 
         employee.setNome(request.nome());
         employee.setEmail(request.email());
-        employee.setPassword(request.password());
+        employee.setPassword(
+                passwordEncoder.encode(request.password())
+        );
 
         Employee savedEmployee = employeeRepository.save(employee);
 
