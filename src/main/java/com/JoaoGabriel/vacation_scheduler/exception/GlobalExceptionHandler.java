@@ -12,6 +12,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(
+            EmailAlreadyExistsException exception) {
+
+        Map<String, String> body = Map.of(
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(body);
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleInvalidCredentials(
             InvalidCredentialsException exception) {
