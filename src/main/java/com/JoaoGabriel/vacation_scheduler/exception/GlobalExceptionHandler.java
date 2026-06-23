@@ -1,5 +1,6 @@
 package com.JoaoGabriel.vacation_scheduler.exception;
 
+import com.JoaoGabriel.vacation_scheduler.auth.exception.InvalidCredentialsException;
 import com.JoaoGabriel.vacation_scheduler.employee.exception.EmailAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +12,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(
-            EmailAlreadyExistsException exception) {
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCredentials(
+            InvalidCredentialsException exception) {
 
         Map<String, String> body = Map.of(
                 "message", exception.getMessage()
         );
 
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(body);
     }
 }
