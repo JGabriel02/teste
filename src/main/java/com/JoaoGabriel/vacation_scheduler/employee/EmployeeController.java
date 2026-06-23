@@ -5,6 +5,7 @@ import com.JoaoGabriel.vacation_scheduler.employee.dto.EmployeeResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/employees")
@@ -16,5 +17,17 @@ public class EmployeeController {
     @PostMapping
     public EmployeeResponse create(@Valid @RequestBody EmployeeRequest request) {
         return employeeService.create(request);
+    }
+
+    @GetMapping("/me")
+    public EmployeeResponse me(Authentication authentication) {
+
+        Employee employee = (Employee) authentication.getPrincipal();
+
+        return new EmployeeResponse(
+                employee.getId(),
+                employee.getNome(),
+                employee.getEmail()
+        );
     }
 }
