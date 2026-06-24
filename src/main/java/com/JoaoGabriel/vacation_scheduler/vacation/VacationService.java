@@ -3,6 +3,7 @@ package com.JoaoGabriel.vacation_scheduler.vacation;
 import com.JoaoGabriel.vacation_scheduler.employee.Employee;
 import com.JoaoGabriel.vacation_scheduler.vacation.dto.VacationRequest;
 import com.JoaoGabriel.vacation_scheduler.vacation.dto.VacationResponse;
+import com.JoaoGabriel.vacation_scheduler.vacation.exception.InvalidVacationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class VacationService {
     ) {
 
         if (request.endDate().isBefore(request.startDate())) {
-            throw new RuntimeException(
+            throw new InvalidVacationException(
                     "A data final não pode ser anterior à data inicial"
             );
         }
@@ -35,7 +36,7 @@ public class VacationService {
                 && totalDays != 20
                 && totalDays != 30) {
 
-            throw new RuntimeException(
+            throw new InvalidVacationException(
                     "O período deve ter 10, 20 ou 30 dias"
             );
         }
@@ -48,7 +49,7 @@ public class VacationService {
                         );
 
         if (overlapping) {
-            throw new RuntimeException(
+            throw new InvalidVacationException(
                     "O período escolhido já está ocupado"
             );
         }
@@ -63,13 +64,13 @@ public class VacationService {
                 .sum();
 
         if (usedDays + totalDays > 30) {
-            throw new RuntimeException(
+            throw new InvalidVacationException(
                     "O funcionário não pode ultrapassar 30 dias de férias"
             );
         }
 
         if (!isValidDivision(usedDays, totalDays)) {
-            throw new RuntimeException(
+            throw new InvalidVacationException(
                     "As férias devem ser tiradas em 30 dias ou divididas em 20 e 10 dias"
             );
         }
