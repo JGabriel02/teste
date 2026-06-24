@@ -28,6 +28,12 @@ public class VacationService {
             );
         }
 
+        if (request.endDate().isBefore(request.startDate())) {
+            throw new InvalidVacationException(
+                    "A data final não pode ser anterior à data inicial"
+            );
+        }
+
         LocalDate eligibilityDate =
                 employee.getAdmissionDate().plusYears(1);
 
@@ -38,9 +44,24 @@ public class VacationService {
             );
         }
 
-        if (request.endDate().isBefore(request.startDate())) {
+        LocalDate cycleStart = calculateCycleStart(
+                employee.getAdmissionDate(),
+                request.startDate()
+        );
+
+        LocalDate cycleEnd = calculateCycleEnd(cycleStart);
+
+        if (LocalDate.now().isBefore(cycleStart)) {
             throw new InvalidVacationException(
-                    "A data final não pode ser anterior à data inicial"
+                    "Este ciclo de férias só estará disponível a partir de "
+                            + cycleStart
+            );
+        }
+
+        if (request.endDate().isAfter(cycleEnd)) {
+            throw new InvalidVacationException(
+                    "O período de férias deve terminar até "
+                            + cycleEnd
             );
         }
 
@@ -72,9 +93,12 @@ public class VacationService {
         }
 
         List<Vacation> employeeVacations =
-                vacationRepository.findByEmployeeIdOrderByStartDateAsc(
-                        employee.getId()
-                );
+                vacationRepository
+                        .findByEmployeeIdAndStartDateBetween(
+                                employee.getId(),
+                                cycleStart,
+                                cycleEnd
+                        );
 
         int usedDays = employeeVacations.stream()
                 .mapToInt(Vacation::getTotalDays)
@@ -170,5 +194,26 @@ public class VacationService {
         }
 
         vacationRepository.delete(vacation);
+    }
+    private LocalDate calculateCycleStart(
+            LocalDate admissionDate,
+            LocalDate vacationStartDate
+    ) {
+        LocalDate cycleStart = admissionDate.plusYears(1);
+
+        while (!vacationStartDate.isBefore(
+                cycleStart.plusYears(1)
+        )) {
+            cycleStart = cycleStart.plusYears(1);
+        }
+
+        return cycleStart;
+    }
+    private LocalDate calculateCycleEnd(
+            LocalDate cycleStart
+    ) {
+        return cycleStart
+                .plusYears(1)
+                .minusDays(1);
     }
 }

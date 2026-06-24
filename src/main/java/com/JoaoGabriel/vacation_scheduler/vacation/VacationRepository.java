@@ -11,6 +11,12 @@ public interface VacationRepository
 
     List<Vacation> findByEmployeeIdOrderByStartDateAsc(Long employeeId);
 
+    List<Vacation> findByEmployeeIdAndStartDateBetween(
+            Long employeeId,
+            LocalDate cycleStart,
+            LocalDate cycleEnd
+    );
+
     boolean existsByStartDateLessThanEqualAndEndDateGreaterThanEqual(
             LocalDate endDate,
             LocalDate startDate
