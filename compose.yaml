@@ -45,6 +45,8 @@
         JWT_SECRET: ${JWT_SECRET}
         JWT_EXPIRATION: 3600000
 
+
+
       depends_on:
         db:
           condition: service_healthy

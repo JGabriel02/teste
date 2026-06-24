@@ -1,11 +1,6 @@
 package com.JoaoGabriel.vacation_scheduler.employee;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -29,6 +24,17 @@ public class Employee {
     @Column(name = "admission_date", nullable = false)
     private LocalDate admissionDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EmployeeRole role;
+
+    @Column(name = "manager_code", unique = true)
+    private String managerCode;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
+
     public Employee() {
     }
 
@@ -37,13 +43,20 @@ public class Employee {
             String nome,
             String email,
             String password,
-            LocalDate admissionDate
+            LocalDate admissionDate,
+            String managerCode,
+            EmployeeRole role,
+            Employee manager
+
     ) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.password = password;
         this.admissionDate = admissionDate;
+        this.managerCode = managerCode;
+        this.role = role;
+        this.manager = manager;
     }
 
     public Long getId() {
@@ -84,6 +97,30 @@ public class Employee {
 
     public void setAdmissionDate(LocalDate admissionDate) {
         this.admissionDate = admissionDate;
+    }
+
+    public EmployeeRole getRole() {
+        return role;
+    }
+
+    public void setRole(EmployeeRole role) {
+        this.role = role;
+    }
+
+    public String getManagerCode() {
+        return managerCode;
+    }
+
+    public void setManagerCode(String managerCode) {
+        this.managerCode = managerCode;
+    }
+
+    public Employee getManager() {
+        return manager;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
     }
 }
 
