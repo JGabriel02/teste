@@ -115,4 +115,18 @@ public class VacationService {
 
         return false;
     }
+
+    public List<VacationResponse> findByEmployee(Employee employee) {
+        return vacationRepository.findByEmployeeId(employee.getId())
+                .stream()
+                .map(vacation -> new VacationResponse(
+                        vacation.getId(),
+                        vacation.getStartDate(),
+                        vacation.getEndDate(),
+                        vacation.getTotalDays(),
+                        vacation.getEmployee().getId(),
+                        vacation.getEmployee().getNome()
+                ))
+                .toList();
+    }
 }

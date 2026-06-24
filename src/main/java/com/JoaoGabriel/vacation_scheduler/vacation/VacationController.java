@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/vacations")
 @RequiredArgsConstructor
@@ -30,5 +32,15 @@ public class VacationController {
                 request,
                 employee
         );
+    }
+
+    @GetMapping("/me")
+    public List<VacationResponse> findMyVacations(
+            Authentication authentication
+    ) {
+        Employee employee =
+                (Employee) authentication.getPrincipal();
+
+        return vacationService.findByEmployee(employee);
     }
 }
