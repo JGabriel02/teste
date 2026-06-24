@@ -1,7 +1,13 @@
 package com.JoaoGabriel.vacation_scheduler.employee;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "employees")
@@ -11,22 +17,33 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
-    public Employee(){
+    @Column(name = "admission_date", nullable = false)
+    private LocalDate admissionDate;
 
+    public Employee() {
     }
 
-    public Employee(Long id, String nome, String email, String password) {
+    public Employee(
+            Long id,
+            String nome,
+            String email,
+            String password,
+            LocalDate admissionDate
+    ) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.password = password;
+        this.admissionDate = admissionDate;
     }
 
     public Long getId() {
@@ -60,4 +77,13 @@ public class Employee {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public LocalDate getAdmissionDate() {
+        return admissionDate;
+    }
+
+    public void setAdmissionDate(LocalDate admissionDate) {
+        this.admissionDate = admissionDate;
+    }
 }
+

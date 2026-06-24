@@ -4,14 +4,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface VacationRepository
         extends JpaRepository<Vacation, Long> {
 
-    List<Vacation> findByEmployeeId(Long employeeId);
+    List<Vacation> findByEmployeeIdOrderByStartDateAsc(Long employeeId);
 
     boolean existsByStartDateLessThanEqualAndEndDateGreaterThanEqual(
             LocalDate endDate,
             LocalDate startDate
+    );
+
+    Optional<Vacation> findByIdAndEmployeeId(
+            Long id,
+            Long employeeId
     );
 }

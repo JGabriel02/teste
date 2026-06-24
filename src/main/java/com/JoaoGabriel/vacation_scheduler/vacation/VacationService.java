@@ -7,6 +7,7 @@ import com.JoaoGabriel.vacation_scheduler.vacation.exception.InvalidVacationExce
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -20,6 +21,22 @@ public class VacationService {
             VacationRequest request,
             Employee employee
     ) {
+
+        if (!request.startDate().isAfter(LocalDate.now())) {
+            throw new InvalidVacationException(
+                    "A data de início das férias deve ser futura"
+            );
+        }
+
+        LocalDate eligibilityDate =
+                employee.getAdmissionDate().plusYears(1);
+
+        if (request.startDate().isBefore(eligibilityDate)) {
+            throw new InvalidVacationException(
+                    "As férias só podem começar a partir de "
+                            + eligibilityDate
+            );
+        }
 
         if (request.endDate().isBefore(request.startDate())) {
             throw new InvalidVacationException(
@@ -55,7 +72,7 @@ public class VacationService {
         }
 
         List<Vacation> employeeVacations =
-                vacationRepository.findByEmployeeId(
+                vacationRepository.findByEmployeeIdOrderByStartDateAsc(
                         employee.getId()
                 );
 
@@ -117,7 +134,8 @@ public class VacationService {
     }
 
     public List<VacationResponse> findByEmployee(Employee employee) {
-        return vacationRepository.findByEmployeeId(employee.getId())
+        return vacationRepository
+                .findByEmployeeIdOrderByStartDateAsc(employee.getId())
                 .stream()
                 .map(vacation -> new VacationResponse(
                         vacation.getId(),
@@ -128,5 +146,29 @@ public class VacationService {
                         vacation.getEmployee().getNome()
                 ))
                 .toList();
+    }
+
+    public void delete(
+            Long vacationId,
+            Employee employee
+    ) {
+        Vacation vacation = vacationRepository
+                .findByIdAndEmployeeId(
+                        vacationId,
+                        employee.getId()
+                )
+                .orElseThrow(() ->
+                        new InvalidVacationException(
+                                "Férias não encontradas para este funcionário"
+                        )
+                );
+
+        if (!vacation.getStartDate().isAfter(LocalDate.now())) {
+            throw new InvalidVacationException(
+                    "Não é possível cancelar férias que já começaram ou terminaram"
+            );
+        }
+
+        vacationRepository.delete(vacation);
     }
 }

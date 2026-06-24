@@ -43,4 +43,19 @@ public class VacationController {
 
         return vacationService.findByEmployee(employee);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        Employee employee =
+                (Employee) authentication.getPrincipal();
+
+        vacationService.delete(
+                id,
+                employee
+        );
+    }
 }

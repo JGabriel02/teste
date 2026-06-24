@@ -22,14 +22,13 @@ public class EmployeeService {
         }
 
         Employee employee = new Employee();
-
         employee.setNome(request.nome());
         employee.setEmail(request.email());
-        employee.setPassword(
-                passwordEncoder.encode(request.password())
-        );
+        employee.setPassword(passwordEncoder.encode(request.password()));
+        employee.setAdmissionDate(request.admissionDate());
 
         Employee savedEmployee = employeeRepository.save(employee);
+
 
         return new EmployeeResponse(
                 savedEmployee.getId(),
