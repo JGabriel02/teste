@@ -47,6 +47,8 @@ public class AuthService {
                 employee.getId(),
                 employee.getNome(),
                 employee.getEmail(),
+                employee.getRole(),
+                employee.getManagerCode(),
                 token
         );
     }
